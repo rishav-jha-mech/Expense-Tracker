@@ -1,13 +1,5 @@
 from django.db import models
 
-
-class Person(models.Model):
-    name = models.CharField(max_length=200)
-    paid = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
-
 class Expense(models.Model):
 
     TYPE_CHOICES = (
@@ -26,7 +18,7 @@ class Expense(models.Model):
 
     date = models.DateField()
     amount = models.BigIntegerField()
-    person = models.ForeignKey(Person, on_delete=models.CASCADE,default=None,blank=True)
+    person = models.CharField(max_length=100)
     category = models.CharField(max_length=100,choices= CATEGORY_CHOICES)
     description = models.TextField()
 
