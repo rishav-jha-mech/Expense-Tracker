@@ -6,10 +6,12 @@ def index(request):
 
     today = datetime.now()
     todays_expenses = Expense.objects.all()
-    # todays_expenses = Expense.objects.filter(date=today)
+    todays_expenses = todays_expenses.filter(date=today.date())
+    monthly_expenses = Expense.objects.filter(date__month=today.month)
 
     context = {
         'expenses': todays_expenses,
+        'monthly_expenses': monthly_expenses,
     }
 
     if request.method == 'POST':
