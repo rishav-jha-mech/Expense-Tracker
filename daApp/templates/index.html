@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{company.name}}</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/fontawesome/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/logo/logo.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/stepper.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-light">
+        <div class="container d-flex justify-content-center align-items-center">
+            <h1>Expense Tracker</h1>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card minh400">
+                    <div class="card-header">
+                        <h4>Expense History</h4>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card minh400">
+                    <div class="card-header">
+                        <h4>Add Expense</h4>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="row">
+                                <div class="col-lg-6 col-12">
+                                    <span class="font-bold">Amount</span>
+                                    <input type="text" class="form-control mb-3" placeholder="Enter amount" />
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <span class="font-bold">Type</span>
+                                    <select class="form-control mb-3">
+                                        <option>Self</option>
+                                        <option>Others</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-12">
+                                    <span class="font-bold mb-1">Date</span>
+                                    <input type="date" class="form-control mb-3" />
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <span class="font-bold mb-1">Category</span>
+                                    <select class="form-control mb-3">
+                                        <option>Select Category</option>
+                                        <option>Food</option>
+                                        <option>Travel</option>
+                                        <option>Shopping</option>
+                                        <option>Entertainment</option>
+                                        <option>Others</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <span class="font-bold mb-1">Description</span>
+                            <textarea class="form-control mb-3" placeholder="Enter description" rows="5"></textarea>
+                            <button class="btn btn-primary btn-block mt-3 py-2">Add Expense</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'vendors/apexcharts/apexcharts.js' %}"></script>
+
+</html>

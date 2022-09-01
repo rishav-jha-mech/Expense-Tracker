@@ -1,0 +1,78 @@
+.step-wizard-item{
+    list-style: none;
+    border-radius: 8px;
+    margin:  0 0 12px 0;
+}
+.done{
+    background: #66f;
+    color: #fff !important;
+}
+.star{
+    background: #fff;
+    color: #66f !important;
+}
+.step-wizard-item .boxx{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.step-wizard-item .progress-count{
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width:  45px;
+}
+.Completed{
+    background: green;
+    color: #fff;
+}
+.Current{
+    background: #66f;
+    color: #fff;
+}
+.Upcoming{
+    color: #666;
+    background: rgb(236, 234, 234);
+}
+.progress-label{
+    font-size: 14px;
+    display: block;
+    text-align: center;
+}
+.Current-text{
+    font-weight: bold;
+    color: #66f;
+}
+.Upcoming-text{
+    font-weight: bold;
+    opacity: 0.5;
+    color: #333;
+}
+.Completed-bg{
+    transition: 0.5s;
+}
+.Completed-bg:hover{
+    background: rgba(0, 128, 0, 0.05);
+    transition: 0.5s;
+}
+.Current-bg{
+    background: rgba(102, 102, 255, 0.05);
+    transition: 0.5s;
+}
+.Current-bg:hover{
+    background: rgba(102, 102, 255, 0.05);
+    transition: 0.5s;
+}
+.Upcoming-bg{
+    opacity: 0.7;
+}
+.time{
+    font-size: 14px;
+}
+.deadlineCrossed{
+    font-size: 12px !important;
+}
