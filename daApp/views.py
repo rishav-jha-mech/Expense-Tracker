@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from datetime import datetime
+from datetime import datetime, timedelta
 from daApp.models import Expense
+from daApp.utils import date_range_list
 
 def index(request):
 
@@ -60,6 +61,24 @@ def detailedToday(request):
     }
     return render(request, 'detailedToday.html', context)
 
+def dailyReport(request):
+
+    today = datetime.now() - timedelta(days=7)
+    endDate = today + timedelta(days=7)
+    date_list = date_range_list(today, endDate)
+    datas = []
+    for date in date_list:
+        daDate = date.strftime('%Y-%m-%d')
+        expenses = Expense.objects.filter(date=daDate)
+        total = sum([expense.amount for expense in expenses])
+        datas.append({'date': date, 'total': total})
+
+    print(datas)
+    context = {
+        'datas' : datas,
+    }
+    return render(request, 'dailyReport.html', context)
+
 def expenseOnADate(request,slug):
     expenses = Expense.objects.filter(date=slug).values()
     return JsonResponse({'data': list(expenses)}, safe=False)
@@ -72,15 +91,12 @@ def expenseOnAMonth(request):
     expenses = Expense.objects.filter(date__month=month,date__year=year).values()
     return JsonResponse({'data': list(expenses)}, safe=False)
 
-def totalExpenseInADay(request):
-    day = request.GET.get('day')
-    month = request.GET.get('month')
-    year = request.GET.get('year')
-    if year is None or month is None or day is None:
-        return JsonResponse({'data': 'Wrong Improper Month, Year, or Day params'}, safe=False)
-    expenses = Expense.objects.filter(date__month=month, date__day=day, date__year=year)
-    total = sum(iterable=expenses.values_list('amount', flat=True))
-    return JsonResponse({'data': total}, safe=False)
+def totalExpenseInADay(request,slug):
+    expenses = Expense.objects.filter(date=slug)
+    sum = 0
+    for expense in expenses:
+        sum += expense.amount
+    return JsonResponse({'data': sum}, safe=False)
 
 def totalExpenseInAMonth(request):
     month = request.GET.get('month')

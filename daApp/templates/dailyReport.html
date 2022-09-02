@@ -1,0 +1,237 @@
+{% load static %}
+{% load general %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/fontawesome/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/logo/logo.png' %}" type="image/x-icon">
+</head>
+<style>
+    .one-line {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .green {
+        color: #38D414;
+    }
+</style>
+
+<body>
+
+
+    <nav class="navbar navbar-light">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/">
+                <h1>Expense Tracker</h1>
+            </a>
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Navigation
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="{% url 'detailedToday' %}">Detailed Daywise</a></li>
+                    <li><a class="dropdown-item" href="#">Monthly Report</a></li>
+                    <li><a class="dropdown-item" href="{% url 'dailyReport' %}">Daily Report</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card minh300">
+            <div class="card-header">
+                <h4>Amount Spent in last 7 Days</h4>
+                <hr>
+            </div>
+            <canvas height="340" id="avg7Bar"></canvas>
+        </div>
+        <div class="card minh300">
+            <div class="card-header">
+                <h4>Amount Spent in last 7 Days</h4>
+                <hr>
+            </div>
+            <canvas height="340" id="avg7lline"></canvas>
+        </div>
+    </div>
+
+
+
+</body>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Chart Js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"
+    integrity="sha256-cHVO4dqZfamRhWD7s4iXyaXWVK10odD+qp4xidFzqTI=" crossorigin="anonymous"></script>
+<!-- Chart JS Labels -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+    function editSubmit(num) {
+        var form = document.getElementById(`editForm${num}`);
+        form.submit();
+    }
+    var priceList = [
+        {% for data in datas %}
+            {{ data.total }},
+        {% endfor %}
+    ];
+
+    var dateList = [
+        {% for data in datas %}
+            '{{ data.date| date:"d M Y" }}',
+        {% endfor %}   
+    ];
+
+    const chartoptions = {
+        layout: {
+            padding: {
+                top: 28,
+                left: 16,
+                right: 16
+            }
+        },
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            },
+            datalabels: {
+                anchor: 'end',
+                align: 'top',
+                visibility: 'auto',
+                clip: false,
+                formatter: Math.round,
+                color: '#333',
+                font: {
+                    weight: '500'
+                }
+            }
+        }
+    };
+    const chartoptions_pie = {
+        aspectRatio: 1.35,
+        layout: {
+            padding: {
+                top: 28,
+                left: 0
+            }
+        },
+        responsive: true,
+        scales: {
+            y: {
+                display: false
+            },
+            x: {
+                display: false
+            }
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom'
+            },
+            datalabels: {
+                anchor: 'center',
+                align: 'center',
+                visibility: 'auto',
+                clip: false,
+                formatter: (value, ctx) => {
+                    let sum = 0;
+                    let dataArr = ctx.chart.data.datasets[0].data;
+                    dataArr.map(data => {
+                        sum += data;
+                    });
+                    let percentage = (value * 100 / sum).toFixed(0) + "%";
+                    return percentage;
+                },
+                color: '#333',
+                font: {
+                    weight: '500',
+                    size: 16
+                }
+            }
+        }
+    };
+
+    const bgc_colors = [
+        'rgba(255, 99, 132,0.2)',
+        'rgba(75, 192, 192,0.2)',
+        'rgba(255, 205, 86,0.2)',
+        'rgba(201, 203, 207,0.2)',
+        'rgba(54, 162, 23,0.2)',
+        'rgba(102, 102, 255,0.2)',
+        'rgba(255, 171, 102,0.2)',
+        'rgba(199, 255, 32,0.2)',
+        'rgba(0,0,128,0.2)',
+        'rgba(255,165,0,0.2)'
+    ];
+    const border_colors = [
+        'rgb(255, 99, 132)',
+        'rgb(75, 192, 192)',
+        'rgb(255, 205, 86)',
+        'rgb(201, 203, 207)',
+        'rgb(54, 162, 23)',
+        'rgb(102, 102, 255)',
+        'rgb(255, 171, 102)',
+        'rgb(199, 255, 32)',
+        'rgb(0,0,128)',
+        'rgb(255,165,)'
+    ];
+    
+    const avg7lline = document.getElementById('avg7lline').getContext('2d');
+    const avg7llineChart = new Chart(avg7lline, {
+        type: 'line',
+        data: {
+            labels: dateList,
+            datasets: [{
+                data: priceList,
+                label: '',
+                backgroundColor: bgc_colors,
+                borderColor: border_colors,
+                borderWidth: 1
+            }]
+        },
+        options: chartoptions
+    });
+    const avg7Bar = document.getElementById('avg7Bar').getContext('2d');
+    const avg7BarChart = new Chart(avg7Bar, {
+        type: 'bar',
+        data: {
+            labels: dateList,
+            datasets: [{
+                data: priceList,
+                label: '',
+                backgroundColor: bgc_colors,
+                borderColor: border_colors,
+                borderWidth: 1
+            }]
+        },
+        options: chartoptions
+    });
+
+
+
+
+</script>
+
+</html>
