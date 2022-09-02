@@ -45,9 +45,10 @@
                     Navigation
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="{% url 'detailedToday' %}">Detailed Daywise</a></li>
+                    <li><a class="dropdown-item" href="{% url 'detailedDaywise' %}">Detailed Daywise</a></li>
                     <li><a class="dropdown-item" href="{% url 'monthlyReport' %}">Monthly Report</a></li>
                     <li><a class="dropdown-item" href="{% url 'dailyReport' %}">Daily Report</a></li>
+                    <li><a class="dropdown-item" href="{% url 'allDetail' %}">All Detail</a></li>
                 </ul>
             </div>
         </div>
@@ -57,7 +58,7 @@
         <div class="card minh400">
             <div class="card-header">
                 <h4 class="d-flex justify-content-between align-items-center">
-                    <span>Amount Spent on {{ date }}</span>
+                    <span>Amount Spent till now</span>
                     <div class="d-flex">
                         <input class="form-control" id="date" type="date" value="{{ date|date:'Y-m-d' }}" />
                         <button onclick="search()" class="btn btn-primary ms-2">Search</button>
@@ -208,7 +209,7 @@
     }
     function search(){
         var date = document.getElementById('date').value;
-        window.location.href = `{% url 'detailedToday' %}?date=${date}`;
+        window.location.href = `{% url 'detailedDaywise' %}?date=${date}`;
     }
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);

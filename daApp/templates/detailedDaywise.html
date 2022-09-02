@@ -1,0 +1,222 @@
+{% load static %}
+{% load general %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amount Spent Today</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/fontawesome/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/logo/logo.png' %}" type="image/x-icon">
+</head>
+<style>
+    .one-line {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .green {
+        color: #38D414;
+    }
+</style>
+
+<body>
+
+
+    <nav class="navbar navbar-light">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/">
+                <h1>Expense Tracker</h1>
+            </a>
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Navigation
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="{% url 'detailedDaywise' %}">Detailed Daywise</a></li>
+                    <li><a class="dropdown-item" href="{% url 'monthlyReport' %}">Monthly Report</a></li>
+                    <li><a class="dropdown-item" href="{% url 'dailyReport' %}">Daily Report</a></li>
+                    <li><a class="dropdown-item" href="{% url 'allDetail' %}">All Detail</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card minh400">
+            <div class="card-header">
+                <h4 class="d-flex justify-content-between align-items-center">
+                    <span>Amount Spent on {{ date }}</span>
+                    <div class="d-flex">
+                        <input class="form-control" id="date" type="date" value="{{ date|date:'Y-m-d' }}" />
+                        <button onclick="search()" class="btn btn-primary ms-2">Search</button>
+                    </div>
+                </h4>
+
+                <hr>
+            </div>
+            <div class="card-body">
+                <h1 class="my-5 green text-center">₹ {{ expenses | totalExpense}}</h1>
+                <hr>
+
+                <span class="row py-2 border-bottom" data-bs-toggle="modal"
+                    data-bs-target="#EditModal{{forloop.counter}}" type="button">
+                    <div class="col-1">
+                        <span class="font-bold">SL. NO.</span>
+                    </div>
+                    <div class="col-3">
+                        <span class="font-bold ">DESCRIPTION</span>
+                    </div>
+                    <div class="col-2">
+                        <span class="font-bold text-center d-block">PERSON</span>
+                    </div>
+                    <div class="col-2">
+                        <span class="font-bold text-center d-block">CATEGORY</span>
+                    </div>
+                    <div class="col-2">
+                        <span class="font-bold ">DATE</span>
+                    </div>
+                    <div class="col-2 text-center">
+                        <span class="font-bold">AMOUNT </span>
+                    </div>
+                </span>
+
+
+                {% for expense in expenses %}
+
+                <!-- EDIT Modal -->
+                <div class="modal fade" id="EditModal{{forloop.counter}}" tabindex="-1" aria-labelledby="EditModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="EditModalLabel">Edit Expense</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-12">
+                                    <form action="/" method="post" id="editForm{{ forloop.counter }}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="EDIT_EXPENSE">
+                                        <input type="hidden" name="id" value="{{ expense.id }}">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6">
+                                                <span class="font-bold">Amount</span>
+                                                <input name="amount" type="text" class="form-control mb-3"
+                                                    placeholder="Enter amount" value="{{ expense.amount }}" required />
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <span class="font-bold">Spent On</span>
+                                                <input name="person" class="form-control mb-3" placeholder="Spent on"
+                                                    value="{{ expense.person }}" required />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6">
+                                                <span class="font-bold d-block">Date</span>
+                                                <input name="date" type="date" class="form-control mb-3"
+                                                    value="{{ expense.date|date:'Y-m-d' }}" required />
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <span class="font-bold mb-1">Category</span>
+                                                <select name="category" class="form-control mb-3">
+                                                    <option value="{{ expense.category }}">{{ expense.category }}
+                                                    </option>
+                                                    <option value="Others">Others</option>
+                                                    <option value="Food">Food</option>
+                                                    <option value="Travel">Travel</option>
+                                                    <option value="Shopping">Shopping</option>
+                                                    <option value="Education">Education</option>
+                                                    <option value="Medical">Medical</option>
+                                                    <option value="Entertainment">Entertainment</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <span class="font-bold mb-1">Description</span>
+                                        <textarea name="desc" class="form-control mb-3" placeholder="Enter description"
+                                            rows="8">{{ expense.description }}</textarea>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="DELETE_EXPENSE">
+                                    <input type="hidden" name="id" value="{{ expense.id }}">
+                                    <button type="submit" class="btn btn-secondary">
+                                        Delete Expense
+                                    </button>
+                                </form>
+                                <button type="button" onclick="editSubmit({{ forloop.counter }})"
+                                    class="btn btn-primary">Save
+                                    changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Table Body -->
+                <span class="row py-2 border-bottom" data-bs-toggle="modal"
+                    data-bs-target="#EditModal{{forloop.counter}}" type="button">
+                    <div class="col-1">
+                        <span class="font-bold fs-5">{{ forloop.counter }}.</span>
+                    </div>
+                    <div class="col-3">
+                        <span class="one-line">{{ expense.description }}</span>
+                    </div>
+                    <div class="col-2">
+                        <span class="font-bold text-center d-block">{{ expense.person }}</span>
+                    </div>
+                    <div class="col-2">
+                        <span class="font-bold text-center d-block">{{ expense.category }}</span>
+                    </div>
+                    <div class="col-2">
+                        <span class="">{{ expense.date }}</span>
+                    </div>
+                    <div class="col-2 text-center">
+                        <span class="font-bold text-danger fs-5">₹ {{ expense.amount }}</span>
+                    </div>
+                </span>
+
+                {% empty %}
+                <h3 class="text-center my-5">No Expenditure on {{ date }}</h3>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function editSubmit(num) {
+        var form = document.getElementById(`editForm${num}`);
+        form.submit();
+    }
+    function search(){
+        var date = document.getElementById('date').value;
+        window.location.href = `{% url 'detailedDaywise' %}?date=${date}`;
+    }
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const paramDate = urlParams.get('date')
+    if (paramDate != null){
+        document.getElementById('date').value = paramDate;
+    }
+</script>
+
+</html>

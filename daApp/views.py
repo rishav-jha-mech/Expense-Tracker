@@ -50,7 +50,7 @@ def index(request):
 
     return render(request, 'index.html', context)
 
-def detailedToday(request):
+def detailedDaywise(request):
     date = request.GET.get('date')
     if date is None:
         date = datetime.now().date()
@@ -59,7 +59,17 @@ def detailedToday(request):
         'expenses': expenses,
         'date' : date,
     }
-    return render(request, 'detailedToday.html', context)
+    return render(request, 'detailedDaywise.html', context)
+
+def allDetail(request):
+    sort = request.GET.get('sort')
+    if sort is None:
+        sort = '-date'
+    expenses = Expense.objects.all().order_by(sort)
+    context = {
+        'expenses': expenses,
+    }
+    return render(request, 'allDetail.html', context)
 
 def dailyReport(request):
 
