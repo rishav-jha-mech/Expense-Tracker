@@ -49,6 +49,14 @@ def index(request):
 
     return render(request, 'index.html', context)
 
+def detailedToday(request):
+    today = datetime.now()
+    expenses = Expense.objects.filter(date=today.date())
+    context = {
+        'expenses': expenses,
+    }
+    return render(request, 'detailedToday.html', context)
+
 def expenseOnADate(request):
     day = request.GET.get('day')
     month = request.GET.get('month')
