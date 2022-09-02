@@ -50,20 +50,18 @@ def index(request):
     return render(request, 'index.html', context)
 
 def detailedToday(request):
-    today = datetime.now()
-    expenses = Expense.objects.filter(date=today.date())
+    date = request.GET.get('date')
+    if date is None:
+        date = datetime.now().date()
+    expenses = Expense.objects.filter(date=date)
     context = {
         'expenses': expenses,
+        'date' : date,
     }
     return render(request, 'detailedToday.html', context)
 
-def expenseOnADate(request):
-    day = request.GET.get('day')
-    month = request.GET.get('month')
-    year = request.GET.get('year')
-    if year is None or month is None or day is None:
-        return JsonResponse({'data': []}, safe=False)
-    expenses = Expense.objects.filter(date__month=month, date__day=day, date__year=year).values()
+def expenseOnADate(request,slug):
+    expenses = Expense.objects.filter(date=slug).values()
     return JsonResponse({'data': list(expenses)}, safe=False)
 
 def expenseOnAMonth(request):

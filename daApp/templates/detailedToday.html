@@ -36,7 +36,7 @@
     <nav class="navbar navbar-light">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="/">
-                <h1>Amount Spent Today</h1>
+                <h1>Expense Tracker</h1>
             </a>
 
             <div class="dropdown">
@@ -45,7 +45,7 @@
                     Navigation
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Detailed Today</a></li>
+                    <li><a class="dropdown-item" href="{% url 'index' %}">Home</a></li>
                     <li><a class="dropdown-item" href="#">Monthly Report</a></li>
                     <li><a class="dropdown-item" href="#">Daily Report</a></li>
                 </ul>
@@ -56,9 +56,12 @@
     <div class="container mt-4">
         <div class="card minh400">
             <div class="card-header">
-                <h4 class="d-flex justify-content-between">
-                    <span>Amount Spent Today</span>
-                    <span>{% now "SHORT_DATETIME_FORMAT" %}</span>
+                <h4 class="d-flex justify-content-between align-items-center">
+                    <span>Amount Spent on {{ date }}</span>
+                    <div class="d-flex">
+                        <input class="form-control" id="date" type="date" value="{{ date|date:'Y-m-d' }}" />
+                        <button onclick="search()" class="btn btn-primary ms-2">Search</button>
+                    </div>
                 </h4>
 
                 <hr>
@@ -187,7 +190,7 @@
                 </span>
 
                 {% empty %}
-                <h3 class="text-center my-5">No Expenditure Today</h3>
+                <h3 class="text-center my-5">No Expenditure on {{ date }}</h3>
                 {% endfor %}
             </div>
         </div>
@@ -202,6 +205,16 @@
     function editSubmit(num) {
         var form = document.getElementById(`editForm${num}`);
         form.submit();
+    }
+    function search(){
+        var date = document.getElementById('date').value;
+        window.location.href = `{% url 'detailedToday' %}?date=${date}`;
+    }
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const paramDate = urlParams.get('date')
+    if (paramDate != null){
+        document.getElementById('date').value = paramDate;
     }
 </script>
 
