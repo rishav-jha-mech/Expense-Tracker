@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Report</title>
+    <title>Monthly Report</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
@@ -56,14 +56,14 @@
     <div class="container mt-4">
         <div class="card minh300">
             <div class="card-header">
-                <h4>Amount Spent in last 7 Days</h4>
+                <h4>Amount Spent Monthly</h4>
                 <hr>
             </div>
             <canvas height="340" id="avg7Bar"></canvas>
         </div>
         <div class="card minh300">
             <div class="card-header">
-                <h4>Amount Spent in last 7 Days</h4>
+                <h4>Amount Spent Monthly</h4>
                 <hr>
             </div>
             <canvas height="340" id="avg7lline"></canvas>
@@ -87,15 +87,11 @@
     }
     var priceList = [
         {% for data in datas %}
-            {{ data.total }},
+            {{data}},
         {% endfor %}
     ];
 
-    var dateList = [
-        {% for data in datas %}
-            '{{ data.date| date:"d M Y" }}',
-        {% endfor %}   
-    ];
+    var MonthlyList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const chartoptions = {
         layout: {
@@ -124,50 +120,6 @@
                 color: '#333',
                 font: {
                     weight: '500'
-                }
-            }
-        }
-    };
-    const chartoptions_pie = {
-        aspectRatio: 1.35,
-        layout: {
-            padding: {
-                top: 28,
-                left: 0
-            }
-        },
-        responsive: true,
-        scales: {
-            y: {
-                display: false
-            },
-            x: {
-                display: false
-            }
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'bottom'
-            },
-            datalabels: {
-                anchor: 'center',
-                align: 'center',
-                visibility: 'auto',
-                clip: false,
-                formatter: (value, ctx) => {
-                    let sum = 0;
-                    let dataArr = ctx.chart.data.datasets[0].data;
-                    dataArr.map(data => {
-                        sum += data;
-                    });
-                    let percentage = (value * 100 / sum).toFixed(0) + "%";
-                    return percentage;
-                },
-                color: '#333',
-                font: {
-                    weight: '500',
-                    size: 16
                 }
             }
         }
@@ -202,7 +154,7 @@
     const avg7llineChart = new Chart(avg7lline, {
         type: 'line',
         data: {
-            labels: dateList,
+            labels: MonthlyList,
             datasets: [{
                 data: priceList,
                 label: '',
@@ -217,7 +169,7 @@
     const avg7BarChart = new Chart(avg7Bar, {
         type: 'bar',
         data: {
-            labels: dateList,
+            labels: MonthlyList,
             datasets: [{
                 data: priceList,
                 label: '',

@@ -73,11 +73,26 @@ def dailyReport(request):
         total = sum([expense.amount for expense in expenses])
         datas.append({'date': date, 'total': total})
 
-    print(datas)
     context = {
         'datas' : datas,
     }
     return render(request, 'dailyReport.html', context)
+
+
+
+def monthlyReport(request):
+    today = datetime.now()
+    datas = []
+    for month in range(1,13):
+        expenses = Expense.objects.filter(date__month=month,date__year=today.year)
+        total = sum([expense.amount for expense in expenses])
+        datas.append(total)
+
+    context = {
+        'datas' : datas,
+    }
+    return render(request, 'monthlyReport.html', context)
+
 
 def expenseOnADate(request,slug):
     expenses = Expense.objects.filter(date=slug).values()
