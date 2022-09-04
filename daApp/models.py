@@ -24,3 +24,9 @@ class Expense(models.Model):
 
     def __str__(self):
         return self.description
+class Balance(models.Model):
+    date = models.DateField()
+    amount = models.BigIntegerField()
+
+    def __str__(self):
+        return f'{self.date} - {self.amount}'

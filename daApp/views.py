@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from datetime import datetime, timedelta
-from daApp.models import Expense
+from daApp.models import Expense, Balance
 from daApp.utils import date_range_list
 
 def index(request):
@@ -12,6 +12,7 @@ def index(request):
     monthly_expenses = Expense.objects.filter(date__month=today.month)
 
     context = {
+        'date': today.date(),
         'expenses': todays_expenses,
         'monthly_expenses': monthly_expenses,
         'total_expenses': total_expenses,
@@ -59,6 +60,38 @@ def detailedDaywise(request):
         'expenses': expenses,
         'date' : date,
     }
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'DELETE_EXPENSE':
+            expense_id = request.POST.get('id')
+            expense = Expense.objects.get(id=expense_id)
+            expense.delete()
+            return redirect('index')
+
+        if action == 'EDIT_EXPENSE':
+            expense_id = request.POST.get('id')
+            expense = Expense.objects.get(id=expense_id)
+            expense.date=request.POST.get('date')
+            expense.amount=request.POST['amount']
+            expense.person=request.POST['person']
+            expense.category=request.POST['category']
+            expense.description=request.POST['desc']
+            expense.save()
+            return redirect(f'/detailed-daywise?date={date}')
+
+        if action == 'ADD_EXPENSE':
+            expense = Expense(
+                date=request.POST['date'],
+                amount=request.POST['amount'],
+                person=request.POST['person'],
+                category=request.POST['category'],
+                description=request.POST['desc'],
+            )
+            expense.save()
+            return redirect('index')
+
     return render(request, 'detailedDaywise.html', context)
 
 def allDetail(request):
@@ -88,8 +121,6 @@ def dailyReport(request):
     }
     return render(request, 'dailyReport.html', context)
 
-
-
 def monthlyReport(request):
     today = datetime.now()
     datas = []
@@ -102,7 +133,6 @@ def monthlyReport(request):
         'datas' : datas,
     }
     return render(request, 'monthlyReport.html', context)
-
 
 def expenseOnADate(request,slug):
     expenses = Expense.objects.filter(date=slug).values()

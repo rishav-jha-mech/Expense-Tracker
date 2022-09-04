@@ -35,10 +35,12 @@
 
     <nav class="navbar navbar-light">
         <div class="container d-flex justify-content-between align-items-center">
-            <h1 data-bs-toggle="modal" data-bs-target="#addModal" type="button">Expense Tracker</h1>
+            <h1>Expense Tracker</h1>
 
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="d-flex">
+            <button class="btn btn-primary me-5" data-bs-toggle="modal" data-bs-target="#addModal" type="button">Add Expense</button>
+            <div class="dropdown ms-3">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                   Navigation
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -47,7 +49,8 @@
                     <li><a class="dropdown-item" href="{% url 'dailyReport' %}">Daily Report</a></li>
                     <li><a class="dropdown-item" href="{% url 'allDetail' %}">All Detail</a></li>
                 </ul>
-              </div>
+            </div>
+            </div>
         </div>
     </nav>
 
@@ -80,7 +83,7 @@
                             <div class="row">
                                 <div class="col-lg-6 col-12">
                                     <span class="font-bold mb-1">Date</span>
-                                    <input name="date" type="date" class="form-control mb-3" required />
+                                    <input name="date" type="date" class="form-control mb-3" value="{{ date|date:'Y-m-d' }}" required />
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <span class="font-bold mb-1">Category</span>
@@ -114,7 +117,10 @@
             <div class="col-12 col-lg-9">
                 <div class="card minh400">
                     <div class="card-header">
-                        <h4>Amount Spended Today</h4>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4>Amount Spended Today</h4>
+                            <h4>{{ date|date:'d-m-Y' }}</h4>
+                        </div>
                         <hr>
                     </div>
                     <div class="card-body">
