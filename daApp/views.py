@@ -68,7 +68,7 @@ def detailedDaywise(request):
             expense_id = request.POST.get('id')
             expense = Expense.objects.get(id=expense_id)
             expense.delete()
-            return redirect('index')
+            return redirect(f'/detailed-daywise?date={date}')
 
         if action == 'EDIT_EXPENSE':
             expense_id = request.POST.get('id')
@@ -90,7 +90,7 @@ def detailedDaywise(request):
                 description=request.POST['desc'],
             )
             expense.save()
-            return redirect('index')
+            return redirect(f'/detailed-daywise?date={date}')
 
     return render(request, 'detailedDaywise.html', context)
 
