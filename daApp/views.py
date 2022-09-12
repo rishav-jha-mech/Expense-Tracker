@@ -106,18 +106,36 @@ def allDetail(request):
 
 def dailyReport(request):
 
-    today = datetime.now() - timedelta(days=7)
-    endDate = today + timedelta(days=7)
-    date_list = date_range_list(today, endDate)
-    datas = []
-    for date in date_list:
+    today7 = datetime.now() - timedelta(days=7)
+    today15 = datetime.now() - timedelta(days=15)
+    today30 = datetime.now() - timedelta(days=30)
+    date_list7 = date_range_list(today7, today7 + timedelta(days=7))
+    date_list15 = date_range_list(today15, today15 + timedelta(days=15))
+    date_list30 = date_range_list(today30, today30 + timedelta(days=30))
+    datas7 = []
+    datas15 = []
+    datas30 = []
+    for date in date_list7:
         daDate = date.strftime('%Y-%m-%d')
         expenses = Expense.objects.filter(date=daDate)
         total = sum([expense.amount for expense in expenses])
-        datas.append({'date': date, 'total': total})
-
+        datas7.append({'date': date, 'total': total})
+    
+    for date in date_list15:
+        daDate = date.strftime('%Y-%m-%d')
+        expenses = Expense.objects.filter(date=daDate)
+        total = sum([expense.amount for expense in expenses])
+        datas15.append({'date': date, 'total': total})
+    
+    for date in date_list30:
+        daDate = date.strftime('%Y-%m-%d')
+        expenses = Expense.objects.filter(date=daDate)
+        total = sum([expense.amount for expense in expenses])
+        datas30.append({'date': date, 'total': total})
     context = {
-        'datas' : datas,
+        'datas' : datas7,
+        'datas15' : datas15,
+        'datas30' : datas30,
     }
     return render(request, 'dailyReport.html', context)
 

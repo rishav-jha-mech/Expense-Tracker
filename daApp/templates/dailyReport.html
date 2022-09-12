@@ -55,20 +55,67 @@
     </nav>
 
     <div class="container mt-4">
-        <div class="card minh300">
-            <div class="card-header">
-                <h4>Amount Spent in last 7 Days</h4>
-                <hr>
+        <div class="row">
+            <div class="col-9">
+                <div class="card minh300">
+                    <div class="card-header">
+                        <h4>Amount Spent in last 7 Days</h4>
+                        <hr>
+                    </div>
+                    <canvas height="340" id="avg7Bar"></canvas>
+                </div>
             </div>
-            <canvas height="340" id="avg7Bar"></canvas>
-        </div>
-        <div class="card minh300">
-            <div class="card-header">
-                <h4>Amount Spent in last 7 Days</h4>
-                <hr>
+            <div class="col-3">
+                <div class="card minh300">
+                    <div class="card-header">
+                        <h4>Price List</h4>
+                        <hr>
+                    </div>
+                    <div class="card-body minh200" id="priceList1"></div>
+                </div>
             </div>
-            <canvas height="340" id="avg7lline"></canvas>
         </div>
+        
+        <div class="row">
+            <div class="col-9">
+                <div class="card minh300">
+                    <div class="card-header">
+                        <h4>Amount Spent in last 7 Days</h4>
+                        <hr>
+                    </div>
+                        <canvas height="340" id="avg7lline"></canvas>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card minh300">
+                    <div class="card-header">
+                        <h4>Price List</h4>
+                        <hr>
+                    </div>
+                    <div class="card-body minh200" id="priceList2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Bar -->
+        <div class="row">
+            <div class="card minh200">
+                <div class="card-header">
+                    <h4>Amount Spent in last 15 Days</h4>
+                    <hr>
+                </div>
+                    <canvas height="340" id="avg15Bar"></canvas>
+            </div>
+            <div class="card minh300">
+                <div class="card-header">
+                    <h4>Price List for Amount Spent in last 15 Days</h4>
+                    <hr>
+                </div>
+                <div class="card-body row" id="priceList15_1"></div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -86,24 +133,59 @@
         var form = document.getElementById(`editForm${num}`);
         form.submit();
     }
-    var priceList = [
+    var priceList7 = [
         {% for data in datas %}
             {{ data.total }},
         {% endfor %}
     ];
+    
+    var priceList15 = [
+        {% for data in datas15 %}
+            {{ data.total }},
+        {% endfor %}
+    ];
 
-    var dateList = [
+    console.log(priceList15 , priceList7);
+
+    var dateList7 = [
         {% for data in datas %}
             '{{ data.date| date:"d M Y" }}',
         {% endfor %}   
     ];
 
+    var data7 = [
+        {% for data in datas %}
+        {
+            x: '{{ data.date| date:"d M Y" }}',
+            y: {{ data.total }}
+        },
+        {% endfor %}  
+    ]
+
+    
+    var dateList15 = [
+        {% for data in datas %}
+            '{{ data.date| date:"d M Y" }}',
+        {% endfor %}   
+    ];
+
+    var data15 = [
+        {% for data in datas15 %}
+        {
+            x: '{{ data.date| date:"d M Y" }}',
+            y: {{ data.total }}
+        },
+        {% endfor %}  
+    ]
+
+
     const chartoptions = {
         layout: {
             padding: {
                 top: 28,
-                left: 16,
-                right: 16
+                left: 20,
+                right: 20,
+                bottom: 20
             }
         },
         responsive: true,
@@ -203,9 +285,9 @@
     const avg7llineChart = new Chart(avg7lline, {
         type: 'line',
         data: {
-            labels: dateList,
+            labels: '',
             datasets: [{
-                data: priceList,
+                data: data7,
                 label: '',
                 backgroundColor: bgc_colors,
                 borderColor: border_colors,
@@ -218,9 +300,8 @@
     const avg7BarChart = new Chart(avg7Bar, {
         type: 'bar',
         data: {
-            labels: dateList,
             datasets: [{
-                data: priceList,
+                data: data7,
                 label: '',
                 backgroundColor: bgc_colors,
                 borderColor: border_colors,
@@ -231,6 +312,52 @@
     });
 
 
+
+
+    const avg15Bar = document.getElementById('avg15Bar').getContext('2d');
+    const avg15BarChart = new Chart(avg15Bar, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                data: data15,
+                label: '',
+                backgroundColor: bgc_colors,
+                borderColor: border_colors,
+                borderWidth: 1
+            }]
+        },
+        options: chartoptions
+    });
+
+
+
+    // Price Table
+    var priceList1 = document.getElementById('priceList1');
+    var priceList2 = document.getElementById('priceList2');
+    var priceList15_1 = document.getElementById('priceList15_1');
+    
+
+    for (let i = 0; i < priceList15.length; i++) {
+        priceList15_1.innerHTML += `
+    <div class="col-12 col-lg-3 d-flex justify-content-between mb-3">
+        <span class="font-bold">${data15[i].x}</span>
+        <span class="green font-bold">₹${data15[i].y}</span>
+    </div>`;
+
+    }
+
+    for (let i = 0; i < priceList7.length; i++) {
+
+        priceList1.innerHTML += `<div class="d-flex justify-content-between mb-3">
+            <span class="font-bold">${data7[i].x}</span>
+            <span class="green font-bold">₹${data7[i].y}</span>
+                                </div>`;
+
+        priceList2.innerHTML += `<div class="d-flex justify-content-between mb-3">
+            <span class="font-bold">${data7[i].x}</span>
+            <span class="green font-bold">₹${data7[i].y}</span>
+                                </div>`;
+    }
 
 
 </script>
