@@ -1,8 +1,7 @@
 # EXPENSE TRACKER
 
-A simple web based application to track your expenses. 
-<br/>
-Made with Django and Bootstrap.
+#### A simple web based application to track your expenses. 
+#### Made with **Django** and **Bootstrap**.
 
 ## Installation
 
@@ -26,3 +25,41 @@ Made with Django and Bootstrap.
         python manage.py migrate
         python manage.py runserver
     ```
+
+## Screens
+
+<h3 align="center">HOME SCREEN</h3>
+
+<br/> 
+
+![Screenshot1](./docs/1.jpeg)
+
+<br/> 
+
+
+<h3 align="center">ADD EXPENSE POPUP</h3>
+
+<br/> 
+
+![Screenshot1](./docs/2.jpeg)
+
+
+<br/> 
+
+<h3 align="center">MONTHLY EXPENSES</h3>
+
+<br/> 
+
+![Screenshot1](./docs/3.jpeg)
+
+<br/> 
+
+<h3 align="center">RECENT DAYWISE EXPENSES</h3>
+
+<br/> 
+
+![Screenshot1](./docs/4.jpeg)
+
+
+<h3 align="center">Made with ❤️ by Rishav Jha</h3>
+<p align="center">Feel free to open an issue if you find any bug or want to suggest any feature.</p>
