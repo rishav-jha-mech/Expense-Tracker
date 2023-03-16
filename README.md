@@ -25,6 +25,8 @@
         python manage.py migrate
         python manage.py runserver
     ```
+5. Once the project is installed and ready, to avoid activating the environment and running the project again you can run **run.bat** file in windows and **run.sh** file in linux systems.
+   
 
 ## Screens
 
